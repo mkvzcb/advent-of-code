@@ -1,7 +1,9 @@
 # Advent of Code
 
-Rust solutions to the 2021 [Advent of Code](https://adventofcode.com/) problems
+Rust solutions to the 2021 [Advent of Code](https://adventofcode.com/) small programming puzzles.
+
 It was suggested to me by a friend.
+
 I'm still learning rust so there are most certainly better ways to do these problems.
 
 ## Days
