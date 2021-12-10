@@ -1,5 +1,7 @@
-use itertools::izip;
-use std::fs;
+use itertools::{izip, Itertools};
+use std::{ascii::AsciiExt, fs};
+
+// Day one - Part one
 
 pub fn aoc_01a() -> Result<usize, std::io::Error> {
     let file = fs::read_to_string("./input/01")?;
@@ -11,6 +13,9 @@ pub fn aoc_01a() -> Result<usize, std::io::Error> {
         .count();
     Ok(answer)
 }
+
+// Day one - Part two
+
 pub fn aoc_01b() -> Result<usize, std::io::Error> {
     let file = fs::read_to_string("./input/01")?;
     let iter = file.lines().map(|x| x.parse::<i32>().unwrap());
@@ -24,6 +29,8 @@ pub fn aoc_01b() -> Result<usize, std::io::Error> {
     .count();
     Ok(answer)
 }
+
+// Day two - Part one
 
 pub fn aoc_02a() -> Result<i32, std::io::Error> {
     let file = fs::read_to_string("./input/02")?;
@@ -46,6 +53,8 @@ pub fn aoc_02a() -> Result<i32, std::io::Error> {
         });
     Ok(depth * horizontal)
 }
+
+// Day two - Part two
 
 pub fn aoc_02b() -> Result<i32, std::io::Error> {
     let file = fs::read_to_string("./input/02")?;
@@ -70,6 +79,8 @@ pub fn aoc_02b() -> Result<i32, std::io::Error> {
     Ok(depth * horizontal)
 }
 
+// Day three - Part one
+
 pub fn aoc_03a() -> Result<i32, std::io::Error> {
     let file = fs::read_to_string("./input/03")?;
     let mut new_vec: Vec<i32> = file
@@ -78,7 +89,7 @@ pub fn aoc_03a() -> Result<i32, std::io::Error> {
         .collect();
     let mut counter = vec![0; 12];
     for n in (0..12).rev() {
-        new_vec.clone().into_iter().enumerate().for_each(|(x, y)| {
+        new_vec.clone().iter().enumerate().for_each(|(x, y)| {
             if y / i32::pow(2, n) > 0 {
                 counter[n as usize] += 1;
                 new_vec[x] = y - i32::pow(2, n);
@@ -91,10 +102,7 @@ pub fn aoc_03a() -> Result<i32, std::io::Error> {
         .into_iter()
         .map(|x| if x > 500 { '1' } else { '0' })
         .collect::<String>();
-    /*  let answer_2 = counter
-    .into_iter()
-    .map(|x| if x > 500 { '0' } else { '1' })
-    .collect::<String>();*/
+
     let answer_2 = answer_1
         .chars()
         .map(|x| if x == '0' { '1' } else { '0' })
@@ -103,3 +111,78 @@ pub fn aoc_03a() -> Result<i32, std::io::Error> {
     let epsilon = i32::from_str_radix(&answer_2, 2).unwrap();
     Ok(epsilon * gamma)
 }
+
+// Day three - Part two
+// todo REDO whole day 3 part two, can be much shorter
+fn aoc_3b_oxy(xx: Vec<String>, n: usize) -> Vec<String> {
+    let counter = xx.iter().fold(0, |acc, x| {
+        if x.chars().nth(n) == Some('1') {
+            acc + 1
+        } else {
+            acc
+        }
+    });
+    xx.iter()
+        .filter_map(|x| {
+            if counter >= xx.len() / 2 + xx.len() % 2 {
+                if x.chars().nth(n) == Some('1') {
+                    Some(x.to_owned())
+                } else {
+                    None
+                }
+            } else {
+                if x.chars().nth(n) == Some('0') {
+                    Some(x.to_owned())
+                } else {
+                    None
+                }
+            }
+        })
+        .collect()
+}
+// todo REDO whole day 3 part two, can be much shorter
+fn aoc_3b_co2(xx: Vec<String>, n: usize) -> Vec<String> {
+    let counter = xx.iter().fold(0, |acc, x| {
+        if x.chars().nth(n) == Some('1') {
+            acc + 1
+        } else {
+            acc
+        }
+    });
+    xx.iter()
+        .filter_map(|x| {
+            if counter >= xx.len() / 2 + xx.len() % 2 {
+                if x.chars().nth(n) == Some('1') {
+                    None
+                } else {
+                    Some(x.to_owned())
+                }
+            } else {
+                if x.chars().nth(n) == Some('1') {
+                    Some(x.to_owned())
+                } else {
+                    None
+                }
+            }
+        })
+        .collect()
+}
+// todo REDO whole day 3 part two, can be much shorter
+pub fn aoc_03b() -> Result<usize, std::io::Error> {
+    let file = fs::read_to_string("./input/03")?;
+    let mut oxy: Vec<String> = file.lines().map(|x| x.to_owned()).collect();
+    let mut o2: Vec<String> = oxy.clone();
+    for n in 0..12 {
+        if oxy.clone().iter().count() > 1 {
+            oxy = aoc_3b_oxy(oxy, n);
+        }
+        if o2.clone().iter().count() > 1 {
+            o2 = aoc_3b_co2(o2, n);
+        }
+    }
+    Ok(usize::from_str_radix(oxy.first().unwrap(), 2).unwrap()
+        * usize::from_str_radix(o2.first().unwrap(), 2).unwrap())
+}
+// todo REDO whole day 3 part two, can be much shorter
+
+// Day four - part one
